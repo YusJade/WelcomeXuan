@@ -9,6 +9,7 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +24,11 @@ import org.junit.Test;
 public final class WelcomeXuan extends JavaPlugin implements Listener {
 
   private final HttpClient httpClient;
+  private String title = "欢迎{{playerName}}";
+  private String subtitle = "";
+  private Integer fadeIn = 20;
+  private Integer stay = 30;
+  private Integer fadeOut = 10;
 
   public WelcomeXuan() {
     httpClient = HttpClient.newBuilder().build();
@@ -31,6 +37,14 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
   @Override
   public void onEnable() {
     Bukkit.getServer().getPluginManager().registerEvents(this, this);
+    getCommand("wx config").setExecutor(new org.yusjade.welcomexuan.Config());
+    saveDefaultConfig();
+    FileConfiguration config = getConfig();
+    title = getConfig().getString("title.title");
+    subtitle = getConfig().getString("title.subtitle");
+    fadeIn = getConfig().getInt("animation.fadeIn");
+    stay = getConfig().getInt("animation.stay");
+    fadeOut = getConfig().getInt("animation.fadeOut");
   }
 
   @EventHandler
@@ -39,13 +53,19 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
     String playerName = player.getName();
     PlayerProfile playerProfile = player.getPlayerProfile();
     UUID playerUUID = playerProfile.getUniqueId();
-    System.out.println("验明正身：" + playerName + " uuid: " + playerUUID);
+    System.out.println("尝试验明正身：" + playerName + "携带 uuid: " + playerUUID + "进入了游戏！");
     if (isPremium(playerName, playerUUID)) {
+      System.out.println("认证通过，正版玩家 " + playerName + " 驾到！");
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-        onlinePlayer.sendTitle(
-            ChatColor.YELLOW + "欢迎" + ChatColor.BLUE + "正版玩家 " + playerName + ChatColor.GREEN
-                + " 加入游戏！",
-            "全服公告", 10, 20, 10);
+        onlinePlayer.sendTitle(title.replace("{{playerName}}", playerName),
+            subtitle,
+            fadeIn,
+            stay,
+            fadeOut);
+//        onlinePlayer.sendTitle(
+//            ChatColor.YELLOW + "欢迎" + ChatColor.BLUE + "正版玩家 " + playerName + ChatColor.GREEN
+//                + " 加入游戏！",
+//            "全服公告", 10, 20, 10);
       }
     }
   }
@@ -67,7 +87,7 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
           "$1-$2-$3-$4-$5"
       );
       UUID uuid = UUID.fromString(formattedUuidString);
-      System.out.println("Mojang告诉我：" + playerName + " uuid: " + uuid);
+      System.out.println("Mojang告诉我：" + playerName + "的 uuid 是: " + uuid);
 //      log.info(String.format("对比UUID: [从服务器]%s : [从Mojang]%s", playerUUID, uuid));
       return uuid.equals(playerUUID);
     } catch (Exception e) {
