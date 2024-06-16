@@ -36,9 +36,18 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
 
   @Override
   public void onEnable() {
+    System.out.println("[WelcomeXuan]: 加载成功");
     Bukkit.getServer().getPluginManager().registerEvents(this, this);
-    getCommand("wx config").setExecutor(new org.yusjade.welcomexuan.Config());
-    saveDefaultConfig();
+    try {
+      getCommand("welcomexuan").setExecutor(new org.yusjade.welcomexuan.Config());
+      saveDefaultConfig();
+      loadConfig();
+    } catch (Exception e) {
+      System.out.println(e.toString());
+    }
+  }
+
+  public void loadConfig() {
     FileConfiguration config = getConfig();
     title = getConfig().getString("title.title");
     subtitle = getConfig().getString("title.subtitle");

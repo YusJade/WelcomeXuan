@@ -4,3 +4,8 @@ main: org.yusjade.welcomexuan.WelcomeXuan
 api-version: '1.20'
 authors: [YusJade]
 description: 为好友开发的服务器欢迎语插件
+
+commands:
+  welcomexuan:
+    description: WelcomeXuan 指令
+
