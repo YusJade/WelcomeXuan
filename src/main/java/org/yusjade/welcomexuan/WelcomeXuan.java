@@ -6,7 +6,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,7 +16,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerProfile;
 import com.alibaba.fastjson.JSONObject;
-import org.junit.Test;
 
 
 //@Slf4j
@@ -39,7 +37,7 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
     System.out.println("[WelcomeXuan]: 加载成功");
     Bukkit.getServer().getPluginManager().registerEvents(this, this);
     try {
-      getCommand("welcomexuan").setExecutor(new org.yusjade.welcomexuan.Config());
+      getCommand("welcomexuan").setExecutor(new org.yusjade.welcomexuan.MainCommand());
       saveDefaultConfig();
       loadConfig();
     } catch (Exception e) {
@@ -62,27 +60,23 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
     String playerName = player.getName();
     PlayerProfile playerProfile = player.getPlayerProfile();
     UUID playerUUID = playerProfile.getUniqueId();
-    System.out.println("尝试验明正身：" + playerName + "携带 uuid: " + playerUUID + "进入了游戏！");
+    System.out.println("尝试验明正身：" + playerName + "携带 uuid: " + playerUUID + " 进入了游戏！");
     if (isPremium(playerName, playerUUID)) {
       System.out.println("认证通过，正版玩家 " + playerName + " 驾到！");
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-        onlinePlayer.sendTitle(title.replace("{{playerName}}", playerName),
-            subtitle,
+        onlinePlayer.sendTitle(ChatColor.YELLOW + title.replace("{{playerName}}",
+                ChatColor.MAGIC + playerName + ChatColor.YELLOW),
+            ChatColor.AQUA + subtitle,
             fadeIn,
             stay,
             fadeOut);
-//        onlinePlayer.sendTitle(
-//            ChatColor.YELLOW + "欢迎" + ChatColor.BLUE + "正版玩家 " + playerName + ChatColor.GREEN
-//                + " 加入游戏！",
-//            "全服公告", 10, 20, 10);
       }
     }
   }
 
   private boolean isPremium(String playerName, UUID playerUUID) {
     try {
-      System.out.println("向Mojang申请获取uuid...");
-//      log.info("向Mojang申请获取uuid...");
+      System.out.println("向 Mojang 验证 uuid...");
       HttpRequest httpRequest = HttpRequest.newBuilder()
           .uri(new URI(
               String.format("https://api.mojang.com/users/profiles/minecraft/%s", playerName)))
@@ -96,7 +90,7 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
           "$1-$2-$3-$4-$5"
       );
       UUID uuid = UUID.fromString(formattedUuidString);
-      System.out.println("Mojang告诉我：" + playerName + "的 uuid 是: " + uuid);
+      System.out.println("Mojang api：" + playerName + "的 uuid 是: " + uuid);
 //      log.info(String.format("对比UUID: [从服务器]%s : [从Mojang]%s", playerUUID, uuid));
       return uuid.equals(playerUUID);
     } catch (Exception e) {
