@@ -1,14 +1,22 @@
 package org.yusjade.welcomexuan;
 
 import com.alibaba.fastjson.JSON;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +26,8 @@ import org.bukkit.profile.PlayerProfile;
 import com.alibaba.fastjson.JSONObject;
 
 
-//@Slf4j
+@Data
+@EqualsAndHashCode(callSuper = true)
 public final class WelcomeXuan extends JavaPlugin implements Listener {
 
   private final HttpClient httpClient;
@@ -46,12 +55,18 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
   }
 
   public void loadConfig() {
-    FileConfiguration config = getConfig();
-    title = getConfig().getString("title.title");
-    subtitle = getConfig().getString("title.subtitle");
-    fadeIn = getConfig().getInt("animation.fadeIn");
-    stay = getConfig().getInt("animation.stay");
-    fadeOut = getConfig().getInt("animation.fadeOut");
+    InputStream configStream = getResource("config.yml");
+    if (configStream == null) {
+      System.out.println("找不到配置文件 config.yml");
+      return;
+    }
+    YamlConfiguration config = YamlConfiguration.loadConfiguration(
+        new InputStreamReader(configStream, StandardCharsets.UTF_8));
+    title = config.getString("title.title");
+    subtitle = config.getString("title.subtitle");
+    fadeIn = config.getInt("animation.fadeIn");
+    stay = config.getInt("animation.stay");
+    fadeOut = config.getInt("animation.fadeOut");
   }
 
   @EventHandler
