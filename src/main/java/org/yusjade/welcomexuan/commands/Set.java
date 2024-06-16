@@ -9,9 +9,23 @@ public class Set extends SubCommand {
   static YamlConfiguration config;
   static {
     welcomeXuan = WelcomeXuanUtils.getInstance();
-    config = WelcomeXuanUtils.get
+    config = WelcomeXuanUtils.getConfigFile();
   }
   @Override
   public void execute(String[] args) {
+    if (args.length != 2) {
+      return;
+    }
+    String key = args[0];
+    String val = args[1];
+    if (!config.contains(key)) {
+      return;
+    }
+    if (config.isInt(key)) {
+      config.set(key, Integer.parseInt(val));
+    }
+    if (config.isString(key)) {
+      config.set(key, val);
+    }
   }
 }
