@@ -4,7 +4,7 @@
   <groupId>org.yusjade</groupId>
   <artifactId>WelcomeXuan</artifactId>
   <name>WelcomeXuan</name>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0-RELEASE</version>
   <description>为好友开发的服务器欢迎语插件</description>
   <build>
     <resources>

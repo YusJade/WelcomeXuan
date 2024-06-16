@@ -1,10 +1,15 @@
 package org.yusjade.welcomexuan;
 
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import org.yusjade.welcomexuan.utils.WelcomeXuanUtils;
 
 class MainCommand implements CommandExecutor {
 
@@ -16,24 +21,25 @@ class MainCommand implements CommandExecutor {
       if (args[0].equals("reload")) {
         plugin.reloadConfig();
         sender.sendMessage(head + "重载配置文件 config.yml");
-      }
+        WelcomeXuanUtils.printConfig();
     }
     if (args.length == 3 && args[0].equals("set")) {
       if (args[1].equals("fadeIn")) {
         plugin.setFadeIn(Integer.parseInt(args[2]));
       }
       if (args[1].equals("stay")) {
-        plugin.setFadeIn(Integer.parseInt(args[2]));
+        plugin.setStay(Integer.parseInt(args[2]));
       }
       if (args[1].equals("fadeOut")) {
-        plugin.setFadeIn(Integer.parseInt(args[2]));
+        plugin.setFadeOut(Integer.parseInt(args[2]));
       }
     }
-    sender.sendMessage(head + plugin.getConfig().getString("title.title"));
-    sender.sendMessage(head + plugin.getConfig().getString("title.subtitle"));
-    sender.sendMessage(head + plugin.getConfig().getInt("animation.fadeIn"));
-    sender.sendMessage(head + plugin.getConfig().getInt("animation.stay"));
-    sender.sendMessage(head + plugin.getConfig().getInt("animation.fadeOut"));
+
+//    sender.sendMessage(head + plugin.getTitle());
+//    sender.sendMessage(head + plugin.getSubtitle());
+//    sender.sendMessage(head + plugin.getFadeIn().toString());
+//    sender.sendMessage(head + plugin.getStay().toString());
+//    sender.sendMessage(head + plugin.getFadeOut().toString());
     return false;
   }
 }

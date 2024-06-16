@@ -25,9 +25,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.profile.PlayerProfile;
 import com.alibaba.fastjson.JSONObject;
 
-
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
 public final class WelcomeXuan extends JavaPlugin implements Listener {
 
   private final HttpClient httpClient;
@@ -79,8 +78,10 @@ public final class WelcomeXuan extends JavaPlugin implements Listener {
     if (isPremium(playerName, playerUUID)) {
       System.out.println("认证通过，正版玩家 " + playerName + " 驾到！");
       for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        System.out.println("标题形式：" + ChatColor.YELLOW + title.replace("{{playerName}}",
+            String.format(ChatColor.MAGIC + playerName + ChatColor.YELLOW)));
         onlinePlayer.sendTitle(ChatColor.YELLOW + title.replace("{{playerName}}",
-                ChatColor.MAGIC + playerName + ChatColor.YELLOW),
+                String.format(ChatColor.DARK_PURPLE + playerName + ChatColor.YELLOW)),
             ChatColor.AQUA + subtitle,
             fadeIn,
             stay,
