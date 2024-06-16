@@ -4,11 +4,23 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.yusjade.welcomexuan.WelcomeXuan;
 
 public class WelcomeXuanUtils {
+
+  static public YamlConfiguration getConfigFile() {
+    return YamlConfiguration.loadConfiguration(
+        new InputStreamReader(Objects.requireNonNull(getInstance().getResource("config.yml")),
+            StandardCharsets.UTF_8));
+  }
+
+  static public WelcomeXuan getInstance() {
+    return (WelcomeXuan) WelcomeXuan.getProvidingPlugin(WelcomeXuan.class);
+  }
 
   static public void printConfig() {
     InputStream configStream = null;

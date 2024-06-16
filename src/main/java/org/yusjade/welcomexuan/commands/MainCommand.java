@@ -22,6 +22,7 @@ class MainCommand implements CommandExecutor {
         plugin.reloadConfig();
         sender.sendMessage(head + "重载配置文件 config.yml");
         WelcomeXuanUtils.printConfig();
+      }
     }
     if (args.length == 3 && args[0].equals("set")) {
       if (args[1].equals("fadeIn")) {
